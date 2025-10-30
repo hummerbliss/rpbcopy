@@ -38,6 +38,24 @@ clipboard-read = allow
 clipboard-write = allow
 ```
 
+### tmux
+
+If you're using `rpbcopy` inside a `tmux` session, you need to enable OSC52 support.
+
+Add this to your `~/.tmux.conf`:
+
+```tmux
+set -g set-clipboard on
+```
+
+Then reload your tmux configuration:
+
+```bash
+tmux source-file ~/.tmux.conf
+```
+
+Or restart tmux to apply the changes.
+
 ## Usage
 
 Just like the normal `pbcopy`:
@@ -63,6 +81,7 @@ If you want to save the content of clipboard to a remote file, try this:
 
 * [iTerm2](https://iterm2.com/)
 * [Ghostty](https://ghostty.org/)
+* tmux 3.3a with Ghostty
 
 ## See also
 
