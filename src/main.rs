@@ -1,12 +1,10 @@
-extern crate clipboard_ext;
 extern crate clap;
 
 use std::fs;
-use clipboard_ext::prelude::*;
-use clipboard_ext::osc52::Osc52ClipboardContext;
 use clap::Parser;
 use std::io;
 use std::io::Read;
+use std::io::Write;
 use exitcode;
 
 
@@ -18,12 +16,27 @@ struct Cli {
     files: Vec<String>,
 }
 
+/// Send content to clipboard using OSC52 escape sequence
+/// Works with iTerm2, Ghostty, and other terminals that support OSC52
+fn copy_to_clipboard_osc52(content: &str) -> Result<(), Box<dyn std::error::Error>> {
+    use base64::{Engine as _, engine::general_purpose::STANDARD};
+    
+    // Encode the content in base64
+    let encoded = STANDARD.encode(content.as_bytes());
+    
+    // Output OSC52 escape sequence: ESC ] 52 ; c ; <base64> BEL
+    // \033 is ESC, \a is BEL (ASCII 7)
+    print!("\x1b]52;c;{}\x07", encoded);
+    io::stdout().flush()?;
+    
+    Ok(())
+}
+
 
 fn main() {
     let stdin = io::stdin();
     let cli = Cli::parse();
     let mut files: Vec<String> = cli.files;
-    // println!("{:?}", files);
 
     let num_stdin_arg = files.iter().filter(|x| *x == "-").count();
     if num_stdin_arg > 1 {
@@ -52,6 +65,6 @@ fn main() {
         contents.push_str(&tmp);
     }
 
-    let mut ctx = Osc52ClipboardContext::new().unwrap();
-    ctx.set_contents(contents).unwrap();
+    copy_to_clipboard_osc52(&contents)
+        .expect("Failed to copy to clipboard");
 }

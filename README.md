@@ -15,7 +15,7 @@ Installing `rpbcopy` is just copy the built artifact to `$PATH`.
        [local]  $ ssh user@remote.host
        [remote] $ git clone https://github.com/expnn/rpbcopy.git
        [remote] $ cd rpbcopy 
-       [remote] $ cd cargo build --release 
+       [remote] $ cargo build --release 
        [remote] $ cp target/release/rpbcopy /path/to/bin/
 
 ### iTerm2
@@ -26,6 +26,17 @@ Features required are not enabled by default
 2. Check "Applications in terminal may access clipboard" in iTerm2 Preferences:
 
     ![img.png](doc/resources/preference.png)
+
+### Ghostty
+
+Ghostty supports OSC52 natively. No additional configuration is needed.
+
+If you want to control clipboard permissions, add these to your `~/.config/ghostty/config`:
+
+```ini
+clipboard-read = allow
+clipboard-write = allow
+```
 
 ## Usage
 
@@ -51,6 +62,7 @@ If you want to save the content of clipboard to a remote file, try this:
 ## Tested with
 
 * [iTerm2](https://iterm2.com/)
+* [Ghostty](https://ghostty.org/)
 
 ## See also
 
